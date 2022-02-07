@@ -25,6 +25,18 @@ impl GameState for State {
 
         self.map.render(ctx);
 
+        let mp = ctx.mouse_point();
+
+        ctx.print(
+            1,
+            1,
+            format!("{}x{}: {}", mp.x, mp.y, self.map.traversable(mp)),
+        );
+
+        if ctx.left_click {
+            self.map.tiles[map_idx_point(mp)] = TileType::Wall;
+        }
+
         if let Some(VirtualKeyCode::Escape) = ctx.key {
             ctx.quitting = true
         }
