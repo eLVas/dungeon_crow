@@ -1,11 +1,29 @@
-use bracket_lib::prelude::*;
+mod map;
 
-struct State {}
+mod prelude {
+    pub use bracket_lib::prelude::*;
+    pub const SCREEN_WIDTH: i32 = 80;
+    pub const SCREEN_HEIGHT: i32 = 50;
+    pub use crate::map::*;
+}
+
+use prelude::*;
+
+struct State {
+    map: Map,
+}
+
+impl State {
+    fn new() -> Self {
+        Self { map: Map::new() }
+    }
+}
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
         ctx.cls();
-        ctx.print(1, 1, "Hello, it's me a terminal.");
+
+        self.map.render(ctx);
 
         if let Some(VirtualKeyCode::Escape) = ctx.key {
             ctx.quitting = true
@@ -16,8 +34,9 @@ impl GameState for State {
 fn main() -> BError {
     let context = BTermBuilder::simple80x50()
         .with_title("Dungeon Crow")
-        .with_fullscreen(true)
+        //.with_fullscreen(true)
+        .with_fps_cap(30.0)
         .build()?;
 
-    main_loop(context, State {})
+    main_loop(context, State::new())
 }
