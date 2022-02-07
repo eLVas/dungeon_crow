@@ -1,4 +1,5 @@
 mod map;
+mod map_builder;
 mod player;
 
 mod prelude {
@@ -6,6 +7,7 @@ mod prelude {
     pub const SCREEN_WIDTH: i32 = 80;
     pub const SCREEN_HEIGHT: i32 = 50;
     pub use crate::map::*;
+    pub use crate::map_builder::*;
     pub use crate::player::*;
 }
 
@@ -14,13 +16,17 @@ use prelude::*;
 struct State {
     map: Map,
     player: Player,
+    debug: bool,
 }
 
 impl State {
-    fn new() -> Self {
+    fn new(debug: bool) -> Self {
+        let mut rng = RandomNumberGenerator::new();
+        let map_builder = MapBuilder::new(&mut rng, false);
         Self {
-            map: Map::new(),
-            player: Player::new(Point::new(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)),
+            map: map_builder.map,
+            player: Player::new(map_builder.player_start),
+            debug,
         }
     }
 }
@@ -33,16 +39,18 @@ impl GameState for State {
         self.map.render(ctx);
         self.player.render(ctx);
 
-        let mp = ctx.mouse_point();
+        if self.debug {
+            let mp = ctx.mouse_point();
 
-        ctx.print(
-            1,
-            1,
-            format!("{}x{}: {}", mp.x, mp.y, self.map.traversable(mp)),
-        );
+            ctx.print(
+                1,
+                1,
+                format!("{}x{}: {}", mp.x, mp.y, self.map.traversable(mp)),
+            );
 
-        if ctx.left_click {
-            self.map.tiles[map_idx_point(mp)] = TileType::Wall;
+            if ctx.left_click {
+                self.map.tiles[map_idx_point(mp)] = TileType::Wall;
+            }
         }
 
         if let Some(VirtualKeyCode::Escape) = ctx.key {
@@ -58,5 +66,5 @@ fn main() -> BError {
         .with_fps_cap(30.0)
         .build()?;
 
-    main_loop(context, State::new())
+    main_loop(context, State::new(false))
 }
