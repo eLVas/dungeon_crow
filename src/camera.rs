@@ -19,6 +19,7 @@ impl Camera {
         cam
     }
 
+    #[allow(dead_code)]
     pub fn debug_mode() -> Self {
         Self {
             left_x: 0,
