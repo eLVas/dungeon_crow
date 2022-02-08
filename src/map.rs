@@ -42,17 +42,23 @@ impl Map {
         }
     }
 
-    pub fn render(&self, ctx: &mut BTerm) {
-        for y in 0..WORLD_HEIGHT {
-            for x in 0..WORLD_WIDTH {
-                let idx = map_idx(x, y);
+    pub fn render(&self, ctx: &mut BTerm, cam: &Camera) {
+        // Use map layer for rendering
+        ctx.set_active_console(0);
 
-                match self.tiles[idx] {
-                    TileType::Floor => {
-                        ctx.set(x, y, GRAY, BLACK, to_cp437('.'));
-                    }
-                    TileType::Wall => {
-                        ctx.set(x, y, DARK_GREY, BLACK, to_cp437('#'));
+        for y in cam.top_y..cam.bottom_y {
+            for x in cam.left_x..cam.right_x {
+                if let Some(idx) = self.try_idx(Point::new(x, y)) {
+                    let x_display = x - cam.left_x;
+                    let y_display = y - cam.top_y;
+
+                    match self.tiles[idx] {
+                        TileType::Floor => {
+                            ctx.set(x_display, y_display, GRAY, BLACK, to_cp437('.'));
+                        }
+                        TileType::Wall => {
+                            ctx.set(x_display, y_display, DARK_GREY, BLACK, to_cp437('#'));
+                        }
                     }
                 }
             }
