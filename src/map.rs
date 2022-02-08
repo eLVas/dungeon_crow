@@ -1,5 +1,5 @@
 use crate::prelude::*;
-const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
+const NUM_TILES: usize = (WORLD_WIDTH * WORLD_HEIGHT) as usize;
 
 #[derive(Copy, Clone, PartialEq)]
 pub enum TileType {
@@ -8,7 +8,7 @@ pub enum TileType {
 }
 
 pub fn map_idx(x: i32, y: i32) -> usize {
-    ((y * SCREEN_WIDTH) + x) as usize
+    ((y * WORLD_WIDTH) + x) as usize
 }
 
 pub fn map_idx_point(point: Point) -> usize {
@@ -27,7 +27,7 @@ impl Map {
     }
 
     pub fn in_bounds(&self, point: Point) -> bool {
-        point.x >= 0 && point.x < SCREEN_WIDTH && point.y >= 0 && point.y < SCREEN_HEIGHT
+        point.x >= 0 && point.x < WORLD_WIDTH && point.y >= 0 && point.y < WORLD_HEIGHT
     }
 
     pub fn traversable(&self, point: Point) -> bool {
@@ -43,16 +43,16 @@ impl Map {
     }
 
     pub fn render(&self, ctx: &mut BTerm) {
-        for y in 0..SCREEN_HEIGHT {
-            for x in 0..SCREEN_WIDTH {
+        for y in 0..WORLD_HEIGHT {
+            for x in 0..WORLD_WIDTH {
                 let idx = map_idx(x, y);
 
                 match self.tiles[idx] {
                     TileType::Floor => {
-                        ctx.set(x, y, YELLOW, BLACK, to_cp437('.'));
+                        ctx.set(x, y, GRAY, BLACK, to_cp437('.'));
                     }
                     TileType::Wall => {
-                        ctx.set(x, y, GREEN, BLACK, to_cp437('#'));
+                        ctx.set(x, y, DARK_GREY, BLACK, to_cp437('#'));
                     }
                 }
             }

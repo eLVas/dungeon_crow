@@ -50,8 +50,8 @@ impl MapBuilder {
     fn build_random_rooms(&mut self, rng: &mut RandomNumberGenerator) {
         while self.rooms.len() < NUM_ROOMS {
             let room = Rect::with_size(
-                rng.range(1, SCREEN_WIDTH - 10),
-                rng.range(1, SCREEN_HEIGHT - 10),
+                rng.range(1, WORLD_WIDTH - 10),
+                rng.range(1, WORLD_HEIGHT - 10),
                 rng.range(2, 10),
                 rng.range(2, 10),
             );
