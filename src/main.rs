@@ -1,14 +1,18 @@
 mod camera;
 mod map;
 mod map_builder;
-mod player;
 
 mod prelude {
     pub use crate::camera::*;
     pub use crate::map::*;
     pub use crate::map_builder::*;
     pub use crate::player::*;
+
     pub use bracket_lib::prelude::*;
+
+    pub use legion::systems::CommandBuffer;
+    pub use legion::world::SubWorld;
+    pub use legion::*;
 
     pub const WORLD_WIDTH: i32 = 80;
     pub const WORLD_HEIGHT: i32 = 50;
@@ -20,7 +24,6 @@ use prelude::*;
 
 struct State {
     map: Map,
-    player: Player,
     camera: Camera,
     debug: bool,
 }
@@ -31,7 +34,6 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng, false);
         Self {
             map: map_builder.map,
-            player: Player::new(map_builder.player_start),
             camera: Camera::new(map_builder.player_start),
             debug,
         }
@@ -46,27 +48,8 @@ impl GameState for State {
         ctx.set_active_console(1);
         ctx.cls();
 
-        self.player.update(ctx, &self.map, &mut self.camera);
-        self.map.render(ctx, &self.camera);
-        self.player.render(ctx, &self.camera);
-
-        if self.debug {
-            let mp = ctx.mouse_point();
-
-            ctx.print(
-                1,
-                1,
-                format!("{}x{}: {}", mp.x, mp.y, self.map.traversable(mp)),
-            );
-
-            if ctx.left_click {
-                self.map.tiles[map_idx_point(mp)] = TileType::Wall;
-            }
-        }
-
-        if let Some(VirtualKeyCode::Escape) = ctx.key {
-            ctx.quitting = true
-        }
+        // TODO: Execute Systems
+        // TODO: Render Draw Buffer
     }
 }
 
