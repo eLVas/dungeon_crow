@@ -14,6 +14,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
 pub fn spawn_monster(esc: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
     esc.push((
         Enemy,
+        MovingRandomly,
         pos,
         Render {
             color: ColorPair::new(WHITE, BLACK),
