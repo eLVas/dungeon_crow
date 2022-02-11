@@ -49,7 +49,10 @@ impl State {
             .iter()
             .skip(1)
             .map(|r| r.center())
-            .for_each(|pos| spawn_monster(&mut ecs, &mut rng, pos));
+            .for_each(|pos| {
+                spawn_monster(&mut ecs, &mut rng, pos);
+                spawn_treasure(&mut ecs, &mut rng, pos - Point::new(1, 0));
+            });
 
         Self {
             ecs,
