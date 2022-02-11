@@ -2,9 +2,14 @@ use crate::prelude::*;
 
 #[system]
 #[read_component(Point)]
+#[read_component(Treasure)]
 #[read_component(Player)]
 #[read_component(Enemy)]
-pub fn collision(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
+pub fn collision(
+    ecs: &mut SubWorld,
+    commands: &mut CommandBuffer,
+    #[resource] score_counter: &mut ScoreCounter,
+) {
     if let Some(player_pos) = <&Point>::query()
         .filter(component::<Player>())
         .iter(ecs)
@@ -16,13 +21,18 @@ pub fn collision(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
             .filter(component::<Enemy>())
             .iter(ecs)
             .filter(|(_, pos)| **pos == *player_pos)
-            .for_each(|(entity, _)| commands.remove(*entity));
+            .for_each(|(entity, _)| {
+                commands.remove(*entity);
+                score_counter.add(1);
+            });
 
         // Collect loot
-        <(Entity, &Point)>::query()
-            .filter(component::<Treasure>())
+        <(Entity, &Treasure, &Point)>::query()
             .iter(ecs)
-            .filter(|(_, pos)| **pos == *player_pos)
-            .for_each(|(entity, _)| commands.remove(*entity));
+            .filter(|(_, _, pos)| **pos == *player_pos)
+            .for_each(|(entity, treasure, _)| {
+                commands.remove(*entity);
+                score_counter.add(treasure.value);
+            });
     }
 }

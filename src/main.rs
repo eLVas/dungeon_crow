@@ -2,6 +2,7 @@ mod camera;
 mod components;
 mod map;
 mod map_builder;
+mod score_counter;
 mod spawner;
 mod systems;
 
@@ -10,6 +11,7 @@ mod prelude {
     pub use crate::components::*;
     pub use crate::map::*;
     pub use crate::map_builder::*;
+    pub use crate::score_counter::*;
     pub use crate::spawner::*;
     pub use crate::systems::*;
 
@@ -41,6 +43,7 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng, false);
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
+        resources.insert(ScoreCounter::new());
 
         spawn_player(&mut ecs, map_builder.player_start);
 
@@ -98,8 +101,10 @@ fn main() -> BError {
         .with_tile_dimensions(tile_width, tile_height)
         .with_resource_path("resources/")
         .with_font("dungeonfont.png", tile_width, tile_height)
+        .with_font("terminal8x8.png", 8, 8)
         .with_simple_console(width, height, "dungeonfont.png")
         .with_simple_console_no_bg(width, height, "dungeonfont.png")
+        .with_simple_console_no_bg(width, height, "terminal8x8.png")
         .build()?;
 
     let state = State::new();

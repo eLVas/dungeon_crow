@@ -8,7 +8,7 @@ pub struct Enemy;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Treasure {
-    value: i32,
+    pub value: i32,
 }
 
 impl Treasure {
