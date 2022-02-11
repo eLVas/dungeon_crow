@@ -11,14 +11,14 @@ pub fn player_input(
 ) {
     if let Some(key) = key {
         let delta = match key {
-            VirtualKeyCode::Left | VirtualKeyCode::Key4 => Point::new(-1, 0),
-            VirtualKeyCode::Right | VirtualKeyCode::Key6 => Point::new(1, 0),
-            VirtualKeyCode::Up | VirtualKeyCode::Key8 => Point::new(0, -1),
-            VirtualKeyCode::Down | VirtualKeyCode::Key2 => Point::new(0, 1),
-            VirtualKeyCode::Key7 => Point::new(-1, -1),
-            VirtualKeyCode::Key9 => Point::new(1, -1),
-            VirtualKeyCode::Key1 => Point::new(-1, 1),
-            VirtualKeyCode::Key3 => Point::new(1, 1),
+            VirtualKeyCode::Left | VirtualKeyCode::Numpad4 => Point::new(-1, 0),
+            VirtualKeyCode::Right | VirtualKeyCode::Numpad6 => Point::new(1, 0),
+            VirtualKeyCode::Up | VirtualKeyCode::Numpad8 => Point::new(0, -1),
+            VirtualKeyCode::Down | VirtualKeyCode::Numpad2 => Point::new(0, 1),
+            VirtualKeyCode::Numpad7 => Point::new(-1, -1),
+            VirtualKeyCode::Numpad9 => Point::new(1, -1),
+            VirtualKeyCode::Numpad1 => Point::new(-1, 1),
+            VirtualKeyCode::Numpad3 => Point::new(1, 1),
             _ => Point::new(0, 0),
         };
 
