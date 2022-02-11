@@ -7,8 +7,7 @@ pub fn entity_render(ecs: &SubWorld, #[resource] camera: &Camera) {
     let mut draw_batch = DrawBatch::new();
     // Draw to player layer
     draw_batch.target(1);
-    // TODO: Move offset to camera
-    let offset = Point::new(camera.left_x, camera.top_y);
+    let offset = camera.get_offset();
 
     <(&Point, &Render)>::query()
         .iter(ecs)

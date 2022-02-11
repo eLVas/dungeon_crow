@@ -19,14 +19,8 @@ impl Camera {
         cam
     }
 
-    #[allow(dead_code)]
-    pub fn debug_mode() -> Self {
-        Self {
-            left_x: 0,
-            right_x: WORLD_WIDTH,
-            top_y: 0,
-            bottom_y: WORLD_HEIGHT,
-        }
+    pub fn get_offset(&self) -> Point {
+        Point::new(self.left_x, self.top_y)
     }
 
     pub fn center_on_player(&mut self, player_position: Point) {
