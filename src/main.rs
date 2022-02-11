@@ -43,7 +43,7 @@ impl State {
     fn new() -> Self {
         let mut ecs = World::default();
         let mut resources = Resources::default();
-        let mut rng = RandomNumberGenerator::seeded(1);
+        let mut rng = RandomNumberGenerator::new();
         let map_builder = MapBuilder::new(&mut rng, false);
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
