@@ -12,7 +12,7 @@ pub fn map_render(#[resource] map: &Map, #[resource] camera: &Camera) {
             let pt = Point::new(x, y);
             let offset = camera.get_offset();
 
-            if map.in_bounds(pt) {
+            if map.in_bounds(pt) && !map.in_inner_space(pt) {
                 let idx = map_idx(x, y);
                 let glyph = match map.tiles[idx] {
                     TileType::Floor => to_cp437('.'),
