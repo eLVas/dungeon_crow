@@ -7,6 +7,15 @@ pub struct Player;
 pub struct Enemy;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
+pub struct MovingRandomly;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct MovementIntention {
+    pub entity: Entity,
+    pub destination: Point,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Treasure {
     pub value: i32,
 }
