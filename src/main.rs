@@ -81,6 +81,8 @@ impl GameState for State {
         ctx.cls();
         ctx.set_active_console(1);
         ctx.cls();
+        ctx.set_active_console(2);
+        ctx.cls();
 
         // Exit when Esc is pressed
         if let Some(VirtualKeyCode::Escape) = ctx.key {
@@ -126,7 +128,7 @@ fn main() -> BError {
         .with_font("terminal8x8.png", 8, 8)
         .with_simple_console(width, height, "dungeonfont.png")
         .with_simple_console_no_bg(width, height, "dungeonfont.png")
-        .with_simple_console_no_bg(width, height, "terminal8x8.png")
+        .with_simple_console_no_bg(width * 2, height * 2, "terminal8x8.png")
         .build()?;
 
     let state = State::new();

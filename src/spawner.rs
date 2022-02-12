@@ -4,6 +4,11 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
     ecs.push((
         Player,
         pos,
+        Name("Eric".to_string()),
+        Health {
+            current: 12,
+            max: 20,
+        },
         Render {
             color: ColorPair::new(WHITE, BLACK),
             glyph: to_cp437('@'),

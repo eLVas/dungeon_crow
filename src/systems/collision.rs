@@ -14,7 +14,7 @@ pub fn collision(
         .filter(component::<Player>())
         .iter(ecs)
         // Take a first value as there should be only one player
-        .next()
+        .nth(0)
     {
         // Kill enemies
         <(Entity, &Point)>::query()
