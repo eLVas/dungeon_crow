@@ -6,6 +6,7 @@ mod map_render;
 mod movement;
 mod player_input;
 mod random_ai;
+mod tooltips;
 
 use crate::prelude::*;
 
@@ -21,6 +22,7 @@ pub fn build_input_scheduler() -> Schedule {
     Schedule::builder()
         .add_system(player_input::player_input_system())
         .flush()
+        .add_system(tooltips::tooltips_system())
         .build()
 }
 

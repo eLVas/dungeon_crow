@@ -53,6 +53,7 @@ pub fn spawn_treasure(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Poi
                 _ => to_cp437('/'),
             },
         },
+        Name("Shiny thing".to_string()),
     ));
 }
 
