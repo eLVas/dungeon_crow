@@ -40,7 +40,9 @@ pub fn spawn_monster(esc: &mut World, rng: &mut RandomNumberGenerator, pos: Poin
 
 pub fn spawn_treasure(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
     ecs.push((
-        Treasure::new(rng.range(1, 5)),
+        Treasure {
+            value: rng.range(1, 5),
+        },
         pos,
         Render {
             color: ColorPair::new(WHITE, BLACK),

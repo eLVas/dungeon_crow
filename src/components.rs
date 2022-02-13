@@ -29,12 +29,6 @@ pub struct Treasure {
     pub value: i32,
 }
 
-impl Treasure {
-    pub fn new(value: i32) -> Self {
-        Self { value }
-    }
-}
-
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Render {
     pub color: ColorPair,
