@@ -10,12 +10,6 @@ pub struct Enemy;
 pub struct MovingRandomly;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct MovementIntention {
-    pub entity: Entity,
-    pub destination: Point,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Health {
     pub current: i32,
     pub max: i32,
@@ -33,4 +27,16 @@ pub struct Treasure {
 pub struct Render {
     pub color: ColorPair,
     pub glyph: FontCharType,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct MovementIntention {
+    pub entity: Entity,
+    pub destination: Point,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct AttackIntention {
+    pub attacker: Entity,
+    pub target: Entity,
 }
