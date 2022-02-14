@@ -37,6 +37,7 @@ struct State {
     input_systems: Schedule,
     player_systems: Schedule,
     monster_systems: Schedule,
+    common_systems: Schedule,
 }
 
 impl State {
@@ -70,6 +71,7 @@ impl State {
             input_systems: build_input_scheduler(),
             player_systems: build_player_scheduler(),
             monster_systems: build_monster_scheduler(),
+            common_systems: build_common_systems(),
         }
     }
 }
@@ -81,14 +83,20 @@ impl GameState for State {
         ctx.cls();
         ctx.set_active_console(1);
         ctx.cls();
+        ctx.set_active_console(2);
+        ctx.cls();
 
         // Exit when Esc is pressed
         if let Some(VirtualKeyCode::Escape) = ctx.key {
             ctx.quitting = true;
         }
 
+        // Register input
         self.resources.insert(ctx.key);
+        ctx.set_active_console(0);
+        self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
 
+        // Run systems
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
         match current_state {
             TurnState::AwaitingInput => self
@@ -101,6 +109,9 @@ impl GameState for State {
                 .monster_systems
                 .execute(&mut self.ecs, &mut self.resources),
         }
+
+        self.common_systems
+            .execute(&mut self.ecs, &mut self.resources);
 
         render_draw_buffer(ctx).expect("Render error");
     }
@@ -126,7 +137,7 @@ fn main() -> BError {
         .with_font("terminal8x8.png", 8, 8)
         .with_simple_console(width, height, "dungeonfont.png")
         .with_simple_console_no_bg(width, height, "dungeonfont.png")
-        .with_simple_console_no_bg(width, height, "terminal8x8.png")
+        .with_simple_console_no_bg(width * 2, height * 2, "terminal8x8.png")
         .build()?;
 
     let state = State::new();
