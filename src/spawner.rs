@@ -5,10 +5,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
         Player,
         pos,
         Name("Eric".to_string()),
-        Health {
-            current: 12,
-            max: 20,
-        },
+        Health { current: 3, max: 5 },
         Render {
             color: ColorPair::new(WHITE, BLACK),
             glyph: to_cp437('@'),
@@ -29,7 +26,7 @@ pub fn spawn_monster(esc: &mut World, rng: &mut RandomNumberGenerator, pos: Poin
             current: hp,
             max: hp,
         },
-        MovingRandomly,
+        ChasingPlayer,
         pos,
         Render {
             color: ColorPair::new(WHITE, BLACK),
