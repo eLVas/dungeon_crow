@@ -2,7 +2,6 @@ mod camera;
 mod components;
 mod map;
 mod map_builder;
-mod score_counter;
 mod spawner;
 mod systems;
 mod turn_state;
@@ -12,7 +11,6 @@ mod prelude {
     pub use crate::components::*;
     pub use crate::map::*;
     pub use crate::map_builder::*;
-    pub use crate::score_counter::*;
     pub use crate::spawner::*;
     pub use crate::systems::*;
     pub use crate::turn_state::*;
@@ -48,7 +46,6 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng, false);
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
-        resources.insert(ScoreCounter::new());
 
         spawn_player(&mut ecs, map_builder.player_start);
 
@@ -82,7 +79,6 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng, false);
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
-        self.resources.insert(ScoreCounter::new());
 
         spawn_player(&mut self.ecs, map_builder.player_start);
 

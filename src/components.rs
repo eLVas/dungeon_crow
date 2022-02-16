@@ -22,11 +22,6 @@ pub struct Health {
 pub struct Name(pub String);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Treasure {
-    pub value: i32,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Render {
     pub color: ColorPair,
     pub glyph: FontCharType,
