@@ -59,7 +59,6 @@ impl State {
             .map(|r| r.center())
             .for_each(|pos| {
                 spawn_monster(&mut ecs, &mut rng, pos);
-                spawn_treasure(&mut ecs, &mut rng, pos - Point::new(1, 0));
             });
 
         resources.insert(rng);
@@ -72,6 +71,40 @@ impl State {
             player_systems: build_player_scheduler(),
             monster_systems: build_monster_scheduler(),
             common_systems: build_common_systems(),
+        }
+    }
+
+    fn restart(&mut self) {
+        self.ecs = World::default();
+        self.resources = Resources::default();
+
+        let mut rng = RandomNumberGenerator::new();
+        let map_builder = MapBuilder::new(&mut rng, false);
+        self.resources.insert(map_builder.map);
+        self.resources.insert(Camera::new(map_builder.player_start));
+        self.resources.insert(ScoreCounter::new());
+
+        spawn_player(&mut self.ecs, map_builder.player_start);
+
+        map_builder
+            .rooms
+            .iter()
+            .skip(1)
+            .map(|r| r.center())
+            .for_each(|pos| {
+                spawn_monster(&mut self.ecs, &mut rng, pos);
+            });
+
+        self.resources.insert(rng);
+        self.resources.insert(TurnState::AwaitingInput);
+    }
+
+    fn game_over(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(2);
+        ctx.print_color_centered(2, RED, BLACK, "Your quest has ended.");
+
+        if let Some(VirtualKeyCode::NumpadEnter) = ctx.key {
+            self.restart()
         }
     }
 }
@@ -98,6 +131,7 @@ impl GameState for State {
 
         // Run systems
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
+
         match current_state {
             TurnState::AwaitingInput => self
                 .input_systems
@@ -108,10 +142,15 @@ impl GameState for State {
             TurnState::MonsterTurn => self
                 .monster_systems
                 .execute(&mut self.ecs, &mut self.resources),
+            TurnState::GameOver => {
+                self.game_over(ctx);
+            }
         }
 
-        self.common_systems
-            .execute(&mut self.ecs, &mut self.resources);
+        if current_state != TurnState::GameOver {
+            self.common_systems
+                .execute(&mut self.ecs, &mut self.resources);
+        }
 
         render_draw_buffer(ctx).expect("Render error");
     }
