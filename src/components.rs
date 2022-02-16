@@ -10,6 +10,9 @@ pub struct Enemy;
 pub struct MovingRandomly;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ChasingPlayer;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Health {
     pub current: i32,
     pub max: i32,
@@ -19,9 +22,10 @@ pub struct Health {
 pub struct Name(pub String);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Treasure {
-    pub value: i32,
-}
+pub struct Item;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct AmuletOfYala;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Render {

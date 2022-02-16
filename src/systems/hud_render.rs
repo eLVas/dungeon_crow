@@ -3,7 +3,7 @@ use crate::prelude::*;
 #[system]
 #[read_component(Health)]
 #[read_component(Player)]
-pub fn hud_render(ecs: &SubWorld, #[resource] score_counter: &ScoreCounter) {
+pub fn hud_render(ecs: &SubWorld) {
     let mut draw_batch = DrawBatch::new();
 
     // Draw to ui layer
@@ -31,9 +31,6 @@ pub fn hud_render(ecs: &SubWorld, #[resource] score_counter: &ScoreCounter) {
         ),
         ColorPair::new(WHITE, RED),
     );
-
-    // Display score
-    draw_batch.print(Point::new(1, 2), format!("Score: {}", score_counter.score));
 
     draw_batch.submit(10000).expect("Batch draw error");
 }

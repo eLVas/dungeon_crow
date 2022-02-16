@@ -2,7 +2,6 @@ mod camera;
 mod components;
 mod map;
 mod map_builder;
-mod score_counter;
 mod spawner;
 mod systems;
 mod turn_state;
@@ -12,7 +11,6 @@ mod prelude {
     pub use crate::components::*;
     pub use crate::map::*;
     pub use crate::map_builder::*;
-    pub use crate::score_counter::*;
     pub use crate::spawner::*;
     pub use crate::systems::*;
     pub use crate::turn_state::*;
@@ -48,9 +46,9 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng, false);
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
-        resources.insert(ScoreCounter::new());
 
         spawn_player(&mut ecs, map_builder.player_start);
+        spawn_amulet_of_yala(&mut ecs, map_builder.amulet_start);
 
         map_builder
             .rooms
@@ -59,7 +57,6 @@ impl State {
             .map(|r| r.center())
             .for_each(|pos| {
                 spawn_monster(&mut ecs, &mut rng, pos);
-                spawn_treasure(&mut ecs, &mut rng, pos - Point::new(1, 0));
             });
 
         resources.insert(rng);
@@ -73,6 +70,89 @@ impl State {
             monster_systems: build_monster_scheduler(),
             common_systems: build_common_systems(),
         }
+    }
+
+    fn reset_game_state(&mut self) {
+        self.ecs = World::default();
+        self.resources = Resources::default();
+
+        let mut rng = RandomNumberGenerator::new();
+        let map_builder = MapBuilder::new(&mut rng, false);
+        self.resources.insert(map_builder.map);
+        self.resources.insert(Camera::new(map_builder.player_start));
+
+        spawn_player(&mut self.ecs, map_builder.player_start);
+        spawn_amulet_of_yala(&mut self.ecs, map_builder.amulet_start);
+
+        map_builder
+            .rooms
+            .iter()
+            .skip(1)
+            .map(|r| r.center())
+            .for_each(|pos| {
+                spawn_monster(&mut self.ecs, &mut rng, pos);
+            });
+
+        self.resources.insert(rng);
+        self.resources.insert(TurnState::AwaitingInput);
+    }
+
+    fn game_over(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(2);
+        ctx.print_color_centered(2, RED, BLACK, "Your quest has ended.");
+        ctx.print_color_centered(
+            18,
+            WHITE,
+            BLACK,
+            "Slain by a monster, your hero's journey has come to a premature end.",
+        );
+        ctx.print_color_centered(
+            19,
+            WHITE,
+            BLACK,
+            "The Amulet of Yala remains unclaimed, and your home town is not saved.",
+        );
+        ctx.print_color_centered(
+            30,
+            YELLOW,
+            BLACK,
+            "Don't worry, you can always try again with a new hero.",
+        );
+        ctx.print_color_centered(34, GREEN, BLACK, "Press NumEnter to play again.");
+
+        if let Some(VirtualKeyCode::NumpadEnter) = ctx.key {
+            self.reset_game_state()
+        }
+
+        ctx.set_active_console(1);
+        ctx.print_centered(11, 'o');
+    }
+
+    fn victory(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(2);
+        ctx.print_color_centered(2, GREEN, BLACK, "You have won!");
+        ctx.print_color_centered(
+            18,
+            WHITE,
+            BLACK,
+            "You put on the Amulet of Yala and feel its power course through \
+your veins.",
+        );
+        ctx.print_color_centered(
+            19,
+            WHITE,
+            BLACK,
+            "Your town is saved, and you can return to your normal life.",
+        );
+
+        ctx.print_color_centered(34, GREEN, BLACK, "Press NumEnter to play again.");
+
+        if let Some(VirtualKeyCode::NumpadEnter) = ctx.key {
+            self.reset_game_state()
+        }
+
+        ctx.set_active_console(1);
+        ctx.print_centered(11, '|');
     }
 }
 
@@ -98,6 +178,7 @@ impl GameState for State {
 
         // Run systems
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
+
         match current_state {
             TurnState::AwaitingInput => self
                 .input_systems
@@ -108,10 +189,14 @@ impl GameState for State {
             TurnState::MonsterTurn => self
                 .monster_systems
                 .execute(&mut self.ecs, &mut self.resources),
+            TurnState::GameOver => self.game_over(ctx),
+            TurnState::Victory => self.victory(ctx),
         }
 
-        self.common_systems
-            .execute(&mut self.ecs, &mut self.resources);
+        if current_state != TurnState::GameOver && current_state != TurnState::Victory {
+            self.common_systems
+                .execute(&mut self.ecs, &mut self.resources);
+        }
 
         render_draw_buffer(ctx).expect("Render error");
     }
