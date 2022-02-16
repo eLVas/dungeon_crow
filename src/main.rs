@@ -103,28 +103,31 @@ impl State {
         ctx.set_active_console(2);
         ctx.print_color_centered(2, RED, BLACK, "Your quest has ended.");
         ctx.print_color_centered(
-            4,
+            18,
             WHITE,
             BLACK,
             "Slain by a monster, your hero's journey has come to a premature end.",
         );
         ctx.print_color_centered(
-            5,
+            19,
             WHITE,
             BLACK,
             "The Amulet of Yala remains unclaimed, and your home town is not saved.",
         );
         ctx.print_color_centered(
-            8,
+            30,
             YELLOW,
             BLACK,
             "Don't worry, you can always try again with a new hero.",
         );
-        ctx.print_color_centered(9, GREEN, BLACK, "Press NumEnter to play again.");
+        ctx.print_color_centered(34, GREEN, BLACK, "Press NumEnter to play again.");
 
         if let Some(VirtualKeyCode::NumpadEnter) = ctx.key {
             self.restart()
         }
+
+        ctx.set_active_console(1);
+        ctx.print_centered(11, '|');
     }
 }
 
