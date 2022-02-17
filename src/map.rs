@@ -30,21 +30,6 @@ impl Map {
         point.x >= 0 && point.x < WORLD_WIDTH && point.y >= 0 && point.y < WORLD_HEIGHT
     }
 
-    pub fn in_inner_space(&self, point: Point) -> bool {
-        let mut inner_space = true;
-
-        for y in point.y - 1..=point.y + 1 {
-            for x in point.x - 1..=point.x + 1 {
-                if self.in_bounds(Point::new(x, y)) && self.tiles[map_idx(x, y)] == TileType::Floor
-                {
-                    inner_space = false;
-                }
-            }
-        }
-
-        inner_space
-    }
-
     pub fn traversable(&self, point: Point) -> bool {
         self.in_bounds(point) && self.tiles[map_idx_point(point)] == TileType::Floor
     }
@@ -69,6 +54,10 @@ impl Map {
 }
 
 impl BaseMap for Map {
+    fn is_opaque(&self, idx: usize) -> bool {
+        self.tiles[idx] != TileType::Floor
+    }
+
     fn get_available_exits(&self, idx: usize) -> SmallVec<[(usize, f32); 10]> {
         let mut exits = SmallVec::new();
         let location = self.index_to_point2d(idx);
