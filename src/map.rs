@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use std::collections::HashSet;
 const NUM_TILES: usize = (WORLD_WIDTH * WORLD_HEIGHT) as usize;
 
 #[derive(Copy, Clone, PartialEq)]
@@ -17,12 +18,14 @@ pub fn map_idx_point(point: Point) -> usize {
 
 pub struct Map {
     pub tiles: Vec<TileType>,
+    pub revealed_tiles: HashSet<Point>,
 }
 
 impl Map {
     pub fn new() -> Self {
         Self {
             tiles: vec![TileType::Floor; NUM_TILES],
+            revealed_tiles: HashSet::new(),
         }
     }
 
@@ -50,6 +53,12 @@ impl Map {
         } else {
             None
         }
+    }
+
+    pub fn reveal_tiles(&mut self, tiles: &HashSet<Point>) {
+        tiles.iter().for_each(|pt| {
+            self.revealed_tiles.insert(*pt);
+        })
     }
 }
 
