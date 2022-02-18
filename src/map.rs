@@ -64,8 +64,12 @@ impl BaseMap for Map {
 
         for y in -1..=1 {
             for x in -1..=1 {
-                if let Some(idx) = self.valid_exit(location, Point::new(x, y)) {
-                    exits.push((idx, 1.0))
+                let delta = Point::new(x, y);
+                if let Some(idx) = self.valid_exit(location, delta) {
+                    exits.push((
+                        idx,
+                        DistanceAlg::Pythagoras.distance2d(location, location + delta),
+                    ));
                 }
             }
         }
