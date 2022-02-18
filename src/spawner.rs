@@ -40,7 +40,7 @@ pub fn spawn_monster(esc: &mut World, rng: &mut RandomNumberGenerator, pos: Poin
             current: hp,
             max: hp,
         },
-        ChasingPlayer,
+        MovingRandomly,
         pos,
         FieldOfView::new(6),
         Render {
