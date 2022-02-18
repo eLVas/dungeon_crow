@@ -2,6 +2,7 @@ mod chase;
 mod combat;
 mod end_turn;
 mod entity_render;
+mod fov;
 mod hud_render;
 mod map_render;
 mod movement;
@@ -13,6 +14,8 @@ use crate::prelude::*;
 
 pub fn build_common_systems() -> Schedule {
     Schedule::builder()
+        .add_system(fov::fov_system())
+        .flush()
         .add_system(map_render::map_render_system())
         .add_system(entity_render::entity_render_system())
         .add_system(hud_render::hud_render_system())

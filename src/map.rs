@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use std::collections::HashSet;
 const NUM_TILES: usize = (WORLD_WIDTH * WORLD_HEIGHT) as usize;
 
 #[derive(Copy, Clone, PartialEq)]
@@ -17,32 +18,19 @@ pub fn map_idx_point(point: Point) -> usize {
 
 pub struct Map {
     pub tiles: Vec<TileType>,
+    pub revealed_tiles: HashSet<Point>,
 }
 
 impl Map {
     pub fn new() -> Self {
         Self {
             tiles: vec![TileType::Floor; NUM_TILES],
+            revealed_tiles: HashSet::new(),
         }
     }
 
     pub fn in_bounds(&self, point: Point) -> bool {
         point.x >= 0 && point.x < WORLD_WIDTH && point.y >= 0 && point.y < WORLD_HEIGHT
-    }
-
-    pub fn in_inner_space(&self, point: Point) -> bool {
-        let mut inner_space = true;
-
-        for y in point.y - 1..=point.y + 1 {
-            for x in point.x - 1..=point.x + 1 {
-                if self.in_bounds(Point::new(x, y)) && self.tiles[map_idx(x, y)] == TileType::Floor
-                {
-                    inner_space = false;
-                }
-            }
-        }
-
-        inner_space
     }
 
     pub fn traversable(&self, point: Point) -> bool {
@@ -66,17 +54,31 @@ impl Map {
             None
         }
     }
+
+    pub fn reveal_tiles(&mut self, tiles: &HashSet<Point>) {
+        tiles.iter().for_each(|pt| {
+            self.revealed_tiles.insert(*pt);
+        })
+    }
 }
 
 impl BaseMap for Map {
+    fn is_opaque(&self, idx: usize) -> bool {
+        self.tiles[idx] != TileType::Floor
+    }
+
     fn get_available_exits(&self, idx: usize) -> SmallVec<[(usize, f32); 10]> {
         let mut exits = SmallVec::new();
         let location = self.index_to_point2d(idx);
 
         for y in -1..=1 {
             for x in -1..=1 {
-                if let Some(idx) = self.valid_exit(location, Point::new(x, y)) {
-                    exits.push((idx, 1.0))
+                let delta = Point::new(x, y);
+                if let Some(idx) = self.valid_exit(location, delta) {
+                    exits.push((
+                        idx,
+                        DistanceAlg::Pythagoras.distance2d(location, location + delta),
+                    ));
                 }
             }
         }
