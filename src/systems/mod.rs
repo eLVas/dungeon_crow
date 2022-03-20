@@ -5,10 +5,11 @@ mod entity_render;
 mod fov;
 mod hud_render;
 mod map_render;
+mod monster_ai;
 mod movement;
 mod player_input;
-mod random_ai;
 mod tooltips;
+mod wander;
 
 use crate::prelude::*;
 
@@ -41,7 +42,9 @@ pub fn build_player_scheduler() -> Schedule {
 
 pub fn build_monster_scheduler() -> Schedule {
     Schedule::builder()
-        .add_system(random_ai::random_movement_system())
+        .add_system(monster_ai::behaviour_system())
+        .flush()
+        .add_system(wander::random_movement_system())
         .add_system(chase::chase_system())
         .flush()
         .add_system(combat::combat_system())
