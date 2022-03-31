@@ -7,6 +7,7 @@ mod themes;
 
 use crate::map_builder::themes::{DungeonTheme, ForestTheme};
 use crate::prelude::*;
+
 use automata::CellularAutomataArchitect;
 use drunkard::DrunkardWalkArchitect;
 use rooms::RoomsArchitect;
