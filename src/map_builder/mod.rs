@@ -131,6 +131,27 @@ impl MapBuilder {
         }
     }
 
+    fn build_border_wall(&mut self) {
+        let tiles_to_update: Vec<usize> = self
+            .map
+            .tiles
+            .iter()
+            .enumerate()
+            .filter(|(idx, _)| {
+                let tile_pos = self.map.index_to_point2d(*idx);
+                tile_pos.x == 0
+                    || tile_pos.y == 0
+                    || tile_pos.x == WORLD_WIDTH - 1
+                    || tile_pos.y == WORLD_HEIGHT - 1
+            })
+            .map(|(idx, _)| idx)
+            .collect();
+
+        tiles_to_update
+            .iter()
+            .for_each(|idx| self.map.tiles[*idx] = TileType::Wall);
+    }
+
     fn spawn_monsters(&self, start: &Point, rng: &mut RandomNumberGenerator) -> Vec<Point> {
         const NUM_MONSTERS: usize = 50;
 
