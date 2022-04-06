@@ -45,6 +45,7 @@ impl State {
         let mut rng = RandomNumberGenerator::new();
         let map_builder = MapBuilder::new(&mut rng);
         resources.insert(map_builder.map);
+        resources.insert(map_builder.theme);
         resources.insert(Camera::new(map_builder.player_start));
 
         spawn_player(&mut ecs, map_builder.player_start);
@@ -75,6 +76,7 @@ impl State {
         let mut rng = RandomNumberGenerator::new();
         let map_builder = MapBuilder::new(&mut rng);
         self.resources.insert(map_builder.map);
+        self.resources.insert(map_builder.theme);
         self.resources.insert(Camera::new(map_builder.player_start));
 
         spawn_player(&mut self.ecs, map_builder.player_start);
