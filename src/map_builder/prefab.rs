@@ -54,7 +54,7 @@ pub fn apply_structure(
         if can_place {
             placement = Some(Point::new(dimentions.x1, dimentions.y1));
             let points = dimentions.point_set();
-            mb.monster_spawns.retain(|pt| !points.contains(pt));
+            mb.monster_spawns.retain(|(pt, _)| !points.contains(pt));
         }
 
         attempts += 1;
@@ -77,7 +77,7 @@ pub fn apply_structure(
                 match c {
                     'M' => {
                         mb.map.tiles[idx] = TileType::Floor;
-                        mb.monster_spawns.push(Point::new(tx, ty));
+                        mb.monster_spawns.push((Point::new(tx, ty), false));
                     }
                     '-' => mb.map.tiles[idx] = TileType::Floor,
                     '#' => mb.map.tiles[idx] = TileType::Wall,

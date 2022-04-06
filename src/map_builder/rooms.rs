@@ -15,7 +15,7 @@ impl MapArchitect for RoomsArchitect {
         mb.amulet_start = mb.find_most_distant();
 
         for room in mb.rooms.iter().skip(1) {
-            mb.monster_spawns.push(room.center());
+            mb.monster_spawns.push((room.center(), false));
         }
 
         mb

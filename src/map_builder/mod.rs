@@ -25,7 +25,7 @@ pub trait MapTheme: Sync + Send {
 pub struct MapBuilder {
     pub map: Map,
     pub rooms: Vec<Rect>,
-    pub monster_spawns: Vec<Point>,
+    pub monster_spawns: Vec<(Point, bool)>,
     pub player_start: Point,
     pub amulet_start: Point,
     pub theme: Box<dyn MapTheme>,
@@ -65,6 +65,8 @@ impl MapBuilder {
     }
 
     fn find_most_distant(&self) -> Point {
+        const UNREACHABLE: &f32 = &f32::MAX;
+
         let map_dimensions = self.map.dimensions();
 
         let dijkstra_map = DijkstraMap::new(
@@ -74,8 +76,6 @@ impl MapBuilder {
             &self.map,
             1024.0,
         );
-
-        const UNREACHABLE: &f32 = &f32::MAX;
 
         self.map.index_to_point2d(
             dijkstra_map
@@ -179,7 +179,7 @@ impl MapBuilder {
             .for_each(|idx| self.map.tiles[*idx] = TileType::Wall);
     }
 
-    fn spawn_monsters(&self, start: &Point, rng: &mut RandomNumberGenerator) -> Vec<Point> {
+    fn spawn_monsters(&self, start: &Point, rng: &mut RandomNumberGenerator) -> Vec<(Point, bool)> {
         const NUM_MONSTERS: usize = 50;
 
         let mut spawnable_tiles: Vec<Point> = self
@@ -199,7 +199,7 @@ impl MapBuilder {
         for _ in 0..NUM_MONSTERS {
             let target_index = rng.random_slice_index(&spawnable_tiles).unwrap();
 
-            spawns.push(spawnable_tiles[target_index].clone());
+            spawns.push((spawnable_tiles[target_index].clone(), true));
             spawnable_tiles.remove(target_index);
         }
         spawns
