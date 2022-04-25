@@ -54,7 +54,7 @@ impl State {
         map_builder
             .monster_spawns
             .iter()
-            .for_each(|pos| spawn_monster(&mut ecs, &mut rng, *pos));
+            .for_each(|pos| spawn_entity(&mut ecs, &mut rng, *pos));
 
         resources.insert(rng);
         resources.insert(TurnState::AwaitingInput);
@@ -207,7 +207,7 @@ fn main() -> BError {
 
     let context = BTermBuilder::new()
         .with_title("Dungeon Crow")
-        .with_fullscreen(true)
+        //.with_fullscreen(true)
         .with_fps_cap(fps_cap)
         .with_dimensions(width, height)
         .with_tile_dimensions(tile_width, tile_height)

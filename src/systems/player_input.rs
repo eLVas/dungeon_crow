@@ -4,12 +4,16 @@ use crate::prelude::*;
 #[read_component(Player)]
 #[write_component(Point)]
 #[write_component(Health)]
+#[read_component(Item)]
+#[read_component(Carried)]
 pub fn player_input(
     ecs: &mut SubWorld,
     commands: &mut CommandBuffer,
     #[resource] key: &Option<VirtualKeyCode>,
     #[resource] turn_state: &mut TurnState,
 ) {
+    let mut players = <(Entity, &Point)>::query().filter(component::<Player>());
+
     if let Some(key) = key {
         let delta = match key {
             VirtualKeyCode::Left | VirtualKeyCode::Numpad4 => Point::new(-1, 0),
@@ -20,11 +24,27 @@ pub fn player_input(
             VirtualKeyCode::Numpad9 => Point::new(1, -1),
             VirtualKeyCode::Numpad1 => Point::new(-1, 1),
             VirtualKeyCode::Numpad3 => Point::new(1, 1),
+            VirtualKeyCode::G => {
+                let (player, player_pos) = players
+                    .iter(ecs)
+                    .find_map(|(entity, pos)| Some((*entity, *pos)))
+                    .unwrap();
+
+                let mut items = <(Entity, &Item, &Point)>::query();
+                items
+                    .iter(ecs)
+                    .filter(|(_, _, &item_pos)| item_pos == player_pos)
+                    .for_each(|(entity, _, _)| {
+                        commands.remove_component::<Point>(*entity);
+                        commands.add_component(*entity, Carried(player));
+                    });
+
+                Point::new(0, 0)
+            }
             _ => Point::new(0, 0),
         };
 
-        let (player, destination) = <(Entity, &Point)>::query()
-            .filter(component::<Player>())
+        let (player, destination) = players
             .iter(ecs)
             .find_map(|(entity, pos)| Some((*entity, *pos + delta)))
             .unwrap();
