@@ -38,10 +38,10 @@ impl Map {
     }
 
     pub fn try_idx(&self, point: Point) -> Option<usize> {
-        if !self.in_bounds(point) {
-            None
-        } else {
+        if self.in_bounds(point) {
             Some(map_idx_point(point))
+        } else {
+            None
         }
     }
 
@@ -55,10 +55,10 @@ impl Map {
         }
     }
 
-    pub fn reveal_tiles(&mut self, tiles: &HashSet<Point>) {
-        tiles.iter().for_each(|pt| {
+    pub fn reveal_tiles(&mut self, tiles: &[Point]) {
+        for pt in tiles.iter() {
             self.revealed_tiles.insert(*pt);
-        })
+        }
     }
 }
 
