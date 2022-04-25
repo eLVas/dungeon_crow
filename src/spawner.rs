@@ -28,11 +28,11 @@ pub fn spawn_amulet_of_yala(ecs: &mut World, pos: Point) {
 }
 
 pub fn spawn_entity(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
-    let roll = rng.roll_dice(1, 6);
+    let roll = rng.roll_dice(1, 12);
 
     match roll {
-        1 => spawn_healing_potion(ecs, pos),
-        2 => spawn_magic_mapper(ecs, pos),
+        1 | 2 => spawn_healing_potion(ecs, pos),
+        3 => spawn_magic_mapper(ecs, pos),
         _ => spawn_monster(ecs, rng, pos),
     }
 }

@@ -21,7 +21,9 @@ pub fn movement(
                 if entry.get_component::<Player>().is_ok() {
                     camera.center_on_player(intended_move.destination);
 
-                    map.reveal_tiles(&fov.visible_tiles);
+                    let visible_tiles: Vec<Point> = fov.visible_tiles.iter().copied().collect();
+
+                    map.reveal_tiles(&visible_tiles);
                 }
             }
         }
