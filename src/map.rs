@@ -6,6 +6,7 @@ const NUM_TILES: usize = (WORLD_WIDTH * WORLD_HEIGHT) as usize;
 pub enum TileType {
     Wall,
     Floor,
+    Exit,
 }
 
 pub fn map_idx(x: i32, y: i32) -> usize {
@@ -34,7 +35,9 @@ impl Map {
     }
 
     pub fn traversable(&self, point: Point) -> bool {
-        self.in_bounds(point) && self.tiles[map_idx_point(point)] == TileType::Floor
+        self.in_bounds(point)
+            && (self.tiles[map_idx_point(point)] == TileType::Floor
+                || self.tiles[map_idx_point(point)] == TileType::Exit)
     }
 
     pub fn try_idx(&self, point: Point) -> Option<usize> {
