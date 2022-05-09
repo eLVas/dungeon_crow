@@ -2,7 +2,7 @@ use crate::prelude::*;
 
 pub fn spawn_player(ecs: &mut World, pos: Point) {
     ecs.push((
-        Player,
+        Player { map_level: 0 },
         pos,
         Name("Eric".to_string()),
         Health { current: 3, max: 5 },

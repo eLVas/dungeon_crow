@@ -2,7 +2,9 @@ use crate::prelude::*;
 use std::collections::HashSet;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Player;
+pub struct Player {
+    pub map_level: u32,
+}
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Enemy;
