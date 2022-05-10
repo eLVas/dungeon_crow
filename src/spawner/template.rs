@@ -97,6 +97,8 @@ impl Templates {
             if let Some(entity) = rng.random_slice_entry(&available_entities) {
                 entity.spawn(pt, &mut cb);
             }
-        })
+        });
+
+        cb.flush(ecs);
     }
 }
