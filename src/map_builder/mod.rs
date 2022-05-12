@@ -9,7 +9,6 @@ use crate::map_builder::themes::{DungeonTheme, ForestTheme};
 use crate::prelude::*;
 use automata::CellularAutomataArchitect;
 use drunkard::DrunkardWalkArchitect;
-use empty::EmptyArchitect;
 use rooms::RoomsArchitect;
 
 const NUM_ROOMS: usize = 20;
@@ -56,7 +55,7 @@ impl MapBuilder {
             monster_spawns: Vec::new(),
             player_start: Point::zero(),
             amulet_start: Point::zero(),
-            theme: themes::DungeonTheme::new(),
+            theme: DungeonTheme::new(),
         }
     }
 
