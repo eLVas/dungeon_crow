@@ -20,6 +20,7 @@ pub struct Template {
     pub glyph: char,
     pub provides: Option<Vec<(String, i32)>>,
     pub hp: Option<i32>,
+    pub base_damage: Option<i32>,
 }
 
 impl Template {
@@ -59,6 +60,13 @@ impl Template {
                         println!("Warning: item has unknown effect {}", provides);
                     }
                 })
+        }
+
+        if let Some(damage) = &self.base_damage {
+            cb.add_component(entity, Damage(*damage));
+            if self.entity_type == EntityType::Item {
+                cb.add_component(entity, Weapon {});
+            }
         }
     }
 }
