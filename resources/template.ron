@@ -15,7 +15,6 @@ Templates(
         Template(
             entity_type: Item,
             name: "Rusty Sword", glyph: '/', levels: [0, 1, 2],
-            provides: Some([("Healing", 6)]),
             frequency: 1,
             base_damage: Some(1)
         ),
