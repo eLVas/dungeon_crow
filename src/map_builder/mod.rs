@@ -7,6 +7,7 @@ mod themes;
 
 use crate::map_builder::themes::{DungeonTheme, ForestTheme};
 use crate::prelude::*;
+
 use automata::CellularAutomataArchitect;
 use drunkard::DrunkardWalkArchitect;
 use rooms::RoomsArchitect;
@@ -64,6 +65,8 @@ impl MapBuilder {
     }
 
     fn find_most_distant(&self) -> Point {
+        const UNREACHABLE: &f32 = &f32::MAX;
+
         let map_dimensions = self.map.dimensions();
 
         let dijkstra_map = DijkstraMap::new(
@@ -73,8 +76,6 @@ impl MapBuilder {
             &self.map,
             1024.0,
         );
-
-        const UNREACHABLE: &f32 = &f32::MAX;
 
         self.map.index_to_point2d(
             dijkstra_map

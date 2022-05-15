@@ -1,6 +1,8 @@
 use crate::prelude::*;
 use std::collections::HashSet;
 
+pub trait MovementBehaviour {}
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Player {
     pub map_level: u32,
@@ -12,8 +14,12 @@ pub struct Enemy;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct MovingRandomly;
 
+impl MovementBehaviour for MovingRandomly {}
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct ChasingPlayer;
+
+impl MovementBehaviour for ChasingPlayer {}
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Health {

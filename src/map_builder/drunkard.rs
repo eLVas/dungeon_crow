@@ -73,7 +73,6 @@ impl MapArchitect for DrunkardWalkArchitect {
         }
 
         mb.build_border_wall();
-
         mb.monster_spawns = mb.spawn_monsters(&center, rng);
         mb.player_start = center;
         mb.amulet_start = mb.find_most_distant();
