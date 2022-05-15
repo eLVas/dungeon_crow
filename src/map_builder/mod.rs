@@ -25,7 +25,7 @@ pub trait MapTheme: Sync + Send {
 pub struct MapBuilder {
     pub map: Map,
     pub rooms: Vec<Rect>,
-    pub monster_spawns: Vec<(Point, bool)>,
+    pub monster_spawns: Vec<Point>,
     pub player_start: Point,
     pub amulet_start: Point,
     pub theme: Box<dyn MapTheme>,
@@ -179,7 +179,7 @@ impl MapBuilder {
             .for_each(|idx| self.map.tiles[*idx] = TileType::Wall);
     }
 
-    fn spawn_monsters(&self, start: &Point, rng: &mut RandomNumberGenerator) -> Vec<(Point, bool)> {
+    fn spawn_monsters(&self, start: &Point, rng: &mut RandomNumberGenerator) -> Vec<Point> {
         const NUM_MONSTERS: usize = 50;
 
         let mut spawnable_tiles: Vec<Point> = self
@@ -199,7 +199,7 @@ impl MapBuilder {
         for _ in 0..NUM_MONSTERS {
             let target_index = rng.random_slice_index(&spawnable_tiles).unwrap();
 
-            spawns.push((spawnable_tiles[target_index].clone(), true));
+            spawns.push(spawnable_tiles[target_index].clone());
             spawnable_tiles.remove(target_index);
         }
         spawns

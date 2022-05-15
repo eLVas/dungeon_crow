@@ -12,9 +12,9 @@ impl MapArchitect for EmptyArchitect {
         mb.amulet_start = mb.find_most_distant();
 
         for _ in 0..50 {
-            mb.monster_spawns.push((
-                Point::new(rng.range(1, WORLD_WIDTH), rng.range(1, WORLD_HEIGHT)),
-                true,
+            mb.monster_spawns.push(Point::new(
+                rng.range(1, WORLD_WIDTH),
+                rng.range(1, WORLD_HEIGHT),
             ));
         }
         mb
